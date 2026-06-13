@@ -1,0 +1,23 @@
+{
+  "name": "Nova.sys",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js"
+  },
+  "keywords": [],
+  "author": "supernova0866",
+  "license": "ISC",
+  "dependencies": {
+    "@libsql/client": "^0.17.3",
+    "axios": "^1.17.0",
+    "discord.js": "^14.26.4",
+    "figlet": "^1.11.0",
+    "moment-timezone": "^0.6.2",
+    "tinycolor2": "^1.6.0",
+    "tzlookup": "^1.4.0"
+  }
+}
