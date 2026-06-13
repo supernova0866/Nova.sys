@@ -1,20 +1,8 @@
 const { OWNER_ID } = require('../config');
 
 function parseRange(rangeStr) {
-  rangeStr = rangeStr.trim();
-  if (rangeStr.includes('-')) {
-    const [min, max] = rangeStr.split('-').map(Number);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  if (rangeStr.startsWith('>')) {
-    const x = Number(rangeStr.slice(1));
-    return Math.floor(Math.random() * (100 - x)) + x + 1;
-  }
-  if (rangeStr.startsWith('<')) {
-    const x = Number(rangeStr.slice(1));
-    return Math.floor(Math.random() * x);
-  }
-  return Math.floor(Math.random() * 101);
+  const [min, max] = rangeStr.trim().split('-').map(Number);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function deleteButton(requesterId) {
