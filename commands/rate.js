@@ -156,7 +156,6 @@ module.exports = {
 
     // Normal rating
     const score = Math.floor(Math.random() * 101);
-    const comment = getComment(type, score);
 
     let title, body;
 
@@ -166,8 +165,9 @@ module.exports = {
     } else if (type === 'peepee') {
       const bar = getPeepeeBar(score);
       title = `## peepee r8 machine`;
-      body = `${displayName}'s peepee\n\`${bar}\`\n\n*${comment}*`;
+      body = `${displayName}'s peepee\n\`${bar}\``;
     } else {
+      const comment = getComment(type, score);
       title = `## ${typeCap} r8 machine`;
       body = `${displayName} is **${score}%** ${type}.\n\n*${comment}*`;
     }
