@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+require('./ping');
 const { TOKEN, CLIENT_ID } = require('./config');
 const { initDB, isAuthorized, recordCommand, recordDenied } = require('./db');
 const { handleDelete } = require('./utils/components');
