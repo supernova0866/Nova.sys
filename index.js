@@ -84,6 +84,7 @@ const commands = [
 ];
 
 for (const cmd of commands) {
+  if (!cmd?.data?.name) { console.error('[Boot] Invalid command object:', cmd); continue; }
   client.commands.set(cmd.data.name, cmd);
 }
 
