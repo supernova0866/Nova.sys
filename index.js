@@ -52,24 +52,26 @@ function buildUnauthorizedResponse() {
   };
 }
 
-const calc = require('./commands/calc');
-const define = require('./commands/define');
-const time = require('./commands/time');
-const { avatarCommand, bannerCommand } = require('./commands/avatarbanner');
-const github = require('./commands/github');
-const ascii = require('./commands/ascii');
-const color = require('./commands/color');
-const ship = require('./commands/ship');
-const rate = require('./commands/rate');
-const lyrics = require('./commands/lyrics');
-const urban = require('./commands/urban');
-const ratelimit = require('./commands/ratelimit');
-const cats = require('./commands/cats');
-const help = require('./commands/help');
-const stats = require('./commands/stats');
-const quote = require('./commands/quote');
-const fact = require('./commands/fact');
-const authorize = require('./commands/authorize');
+console.log('[Boot] Loading commands...');
+const calc = require('./commands/calc'); console.log('[Boot] calc OK');
+
+const define = require('./commands/define'); console.log('[Boot] define OK');
+const time = require('./commands/time'); console.log('[Boot] time OK');
+const { avatarCommand, bannerCommand } = require('./commands/avatarbanner'); console.log('[Boot] avatarbanner OK');
+const github = require('./commands/github'); console.log('[Boot] github OK');
+const ascii = require('./commands/ascii'); console.log('[Boot] ascii OK');
+const color = require('./commands/color'); console.log('[Boot] color OK');
+const ship = require('./commands/ship'); console.log('[Boot] ship OK');
+const rate = require('./commands/rate'); console.log('[Boot] rate OK');
+const lyrics = require('./commands/lyrics'); console.log('[Boot] lyrics OK');
+const urban = require('./commands/urban'); console.log('[Boot] urban OK');
+const ratelimit = require('./commands/ratelimit'); console.log('[Boot] ratelimit OK');
+const cats = require('./commands/cats'); console.log('[Boot] cats OK');
+const help = require('./commands/help'); console.log('[Boot] help OK');
+const stats = require('./commands/stats'); console.log('[Boot] stats OK');
+const quote = require('./commands/quote'); console.log('[Boot] quote OK');
+const fact = require('./commands/fact'); console.log('[Boot] fact OK');
+const authorize = require('./commands/authorize'); console.log('[Boot] authorize OK');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
@@ -83,14 +85,17 @@ const commands = [
   authorize,
 ];
 
-for (const cmd of commands) {
-  if (!cmd?.data?.name) { console.error('[Boot] Invalid command object:', cmd); continue; }
+const validCommands = commands.filter(cmd => {
+  if (!cmd?.data?.name) { console.error('[Boot] Invalid command object:', JSON.stringify(cmd)); return false; }
+  return true;
+});
+for (const cmd of validCommands) {
   client.commands.set(cmd.data.name, cmd);
 }
 
 async function syncCommands() {
   const rest = new REST().setToken(TOKEN);
-  const localCommands = commands.map(c => c.data.toJSON());
+  const localCommands = validCommands.map(c => c.data.toJSON());
   const localNames = new Set(localCommands.map(c => c.name));
 
   let registered;
