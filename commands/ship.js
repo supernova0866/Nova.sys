@@ -23,7 +23,7 @@ module.exports = {
     .setDescription('Check the ship score between two users')
     .addUserOption(o => o.setName('user1').setDescription('First user').setRequired(true))
     .addUserOption(o => o.setName('user2').setDescription('Second user').setRequired(true))
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

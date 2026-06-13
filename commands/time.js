@@ -75,7 +75,7 @@ module.exports = {
     .addStringOption(o =>
       o.setName('location').setDescription('City, timezone (IST, EST), or offset (+5:30, -7)').setRequired(true)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

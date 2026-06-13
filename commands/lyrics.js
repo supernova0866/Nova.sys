@@ -46,7 +46,7 @@ module.exports = {
     .setDescription('Find lyrics for a song')
     .addStringOption(o => o.setName('song').setDescription('Song title').setRequired(true))
     .addStringOption(o => o.setName('artist').setDescription('Artist name (optional)').setRequired(false))
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

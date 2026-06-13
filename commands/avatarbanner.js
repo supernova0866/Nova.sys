@@ -7,7 +7,7 @@ function avatarCommand() {
       .setName('avatar')
       .setDescription("Get a user's avatar")
       .addUserOption(o => o.setName('user').setDescription('User to get avatar for (defaults to you)').setRequired(false))
-      .setIntegrationTypes([1])
+      .setIntegrationTypes([0, 1])
       .setContexts([0, 1, 2]),
 
     async execute(interaction) {
@@ -35,7 +35,7 @@ function bannerCommand() {
       .setName('banner')
       .setDescription("Get a user's profile banner")
       .addUserOption(o => o.setName('user').setDescription('User to get banner for (defaults to you)').setRequired(false))
-      .setIntegrationTypes([1])
+      .setIntegrationTypes([0, 1])
       .setContexts([0, 1, 2]),
 
     async execute(interaction) {

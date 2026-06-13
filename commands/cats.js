@@ -40,7 +40,7 @@ module.exports = {
       o.setName('keyword2').setDescription('Secondary keyword filter').setRequired(false)
         .addChoices(...KEYWORDS.map(k => ({ name: k, value: k })))
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

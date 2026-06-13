@@ -7,7 +7,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('fact')
     .setDescription('Get a random fact')
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

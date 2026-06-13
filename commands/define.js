@@ -9,7 +9,7 @@ module.exports = {
     .addStringOption(o =>
       o.setName('word').setDescription('Word to define').setRequired(true)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

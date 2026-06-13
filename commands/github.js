@@ -32,7 +32,7 @@ module.exports = {
     .addStringOption(o =>
       o.setName('repo').setDescription('Repo name (optional — shows specific repo info)').setRequired(false)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

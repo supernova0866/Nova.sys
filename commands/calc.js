@@ -16,7 +16,7 @@ module.exports = {
     .addStringOption(o =>
       o.setName('expression').setDescription('e.g. 2+2, (10*3)/5, 2^8').setRequired(true)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

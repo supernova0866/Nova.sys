@@ -108,7 +108,7 @@ module.exports = {
     .addUserOption(o =>
       o.setName('user').setDescription('User to rate').setRequired(true)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

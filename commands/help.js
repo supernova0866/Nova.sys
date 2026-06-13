@@ -94,7 +94,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('help')
     .setDescription('Show all available commands')
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

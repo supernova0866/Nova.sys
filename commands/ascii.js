@@ -15,7 +15,7 @@ module.exports = {
       o.setName('font').setDescription('Font style').setRequired(false)
         .addChoices(...FONTS.map(f => ({ name: f, value: f })))
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {

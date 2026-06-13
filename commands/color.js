@@ -9,7 +9,7 @@ module.exports = {
     .addStringOption(o =>
       o.setName('color').setDescription('Hex (#ff0000), RGB (255,0,0), or name (red)').setRequired(true)
     )
-    .setIntegrationTypes([1])
+    .setIntegrationTypes([0, 1])
     .setContexts([0, 1, 2]),
 
   async execute(interaction) {
