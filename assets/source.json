@@ -1,0 +1,52 @@
+{
+  "global_overview": [
+    "Source: I Made It Up.",
+    "Source: The Void.",
+    "Source: Peer Reviewed By Cats.",
+    "Source: Extensive Fabrication.",
+    "Source: My Spreadsheet.",
+    "Source: Trust The Process.",
+    "Source: The Algorithm.",
+    "Source: A Very Reliable Source."
+  ],
+  "global_commands": [
+    "Source: The Spreadsheet.",
+    "Source: Logged Meticulously.",
+    "Source: The Database Remembers.",
+    "Source: Turso, Probably.",
+    "Source: Numbers Don't Lie. These Might.",
+    "Source: Certified Data.",
+    "Source: The Records.",
+    "Source: Extensive Documentation."
+  ],
+  "user_self": [
+    "Source: Extensive Research.",
+    "Source: Your Search History.",
+    "Source: Behavioural Analysis.",
+    "Source: Observation.",
+    "Source: You, Mostly.",
+    "Source: Pattern Recognition.",
+    "Source: The Logs.",
+    "Source: Self-Reported Data."
+  ],
+  "user_other": [
+    "Source: Trust Me Bro.",
+    "Source: We've Been Watching.",
+    "Source: The Files.",
+    "Source: Confidential.",
+    "Source: Anonymous Tip.",
+    "Source: A Little Bird.",
+    "Source: The Archive.",
+    "Source: Surveillance."
+  ],
+  "user_zero": [
+    "Source: The Absence Of Evidence.",
+    "Source: Silence.",
+    "Source: Nothing. Literally Nothing.",
+    "Source: The Void Confirms.",
+    "Source: Null.",
+    "Source: A Very Empty Database.",
+    "Source: No Records Found.",
+    "Source: The Blank Page."
+  ]
+}

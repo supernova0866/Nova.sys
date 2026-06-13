@@ -1,0 +1,163 @@
+{
+  "cats": [
+    "Looking at cats.",
+    "Staring at cats.",
+    "Collecting cat images.",
+    "Being a cat enthusiast.",
+    "Running a cat gallery.",
+    "Conducting cat research.",
+    "Cataloguing cats.",
+    "Appreciating cats, professionally."
+  ],
+  "ship": [
+    "Fabricating relationships.",
+    "Generating misinformation.",
+    "Playing matchmaker.",
+    "Constructing fictional couples.",
+    "Interfering with love lives.",
+    "Running unsolicited compatibility tests.",
+    "Shipping people without consent.",
+    "Playing cupid, badly."
+  ],
+  "rate": [
+    "Judging people.",
+    "Issuing unsolicited ratings.",
+    "Running fake assessments.",
+    "Evaluating humans scientifically.",
+    "Distributing dubious scores.",
+    "Rating things that didn't ask.",
+    "Conducting quality control.",
+    "Generating fake metrics."
+  ],
+  "github": [
+    "Stalking developers.",
+    "Inspecting repositories.",
+    "Conducting code surveillance.",
+    "Browsing GitHub professionally.",
+    "Reviewing other people's code.",
+    "Running background checks on devs.",
+    "Investigating open source activity.",
+    "Auditing commit histories."
+  ],
+  "calc": [
+    "Doing math.",
+    "Avoiding mental arithmetic.",
+    "Outsourcing calculations.",
+    "Computing things.",
+    "Running numbers.",
+    "Delegating arithmetic.",
+    "Solving equations, allegedly.",
+    "Calculating stuff."
+  ],
+  "define": [
+    "Learning words.",
+    "Expanding vocabulary.",
+    "Looking up definitions.",
+    "Consulting the dictionary.",
+    "Acquiring new words.",
+    "Checking spelling, probably.",
+    "Studying the English language.",
+    "Reading the dictionary for fun."
+  ],
+  "time": [
+    "Checking clocks.",
+    "Tracking timezones.",
+    "Wondering what time it is.",
+    "Monitoring world time.",
+    "Checking in on other timezones.",
+    "Running a global clock.",
+    "Keeping track of everyone's time.",
+    "Watching time pass."
+  ],
+  "color": [
+    "Staring at colors.",
+    "Conducting color research.",
+    "Appreciating the spectrum.",
+    "Being suspiciously into colors.",
+    "Running color analysis.",
+    "Studying hexadecimal.",
+    "Collecting colors.",
+    "Inspecting pigmentation."
+  ],
+  "lyrics": [
+    "Finding song lyrics.",
+    "Running a music archive.",
+    "Looking up songs.",
+    "Consulting the library of lyrics.",
+    "Listening to music, probably.",
+    "Researching music.",
+    "Building a playlist, mentally.",
+    "Studying songwriting."
+  ],
+  "urban": [
+    "Learning slang.",
+    "Consulting Urban Dictionary.",
+    "Expanding informal vocabulary.",
+    "Studying internet culture.",
+    "Researching questionable definitions.",
+    "Learning words that shouldn't exist.",
+    "Consulting the other dictionary.",
+    "Acquiring street knowledge."
+  ],
+  "avatar": [
+    "Collecting profile pictures.",
+    "Running a portrait gallery.",
+    "Inspecting avatars.",
+    "Downloading profile pictures, mentally.",
+    "Studying profile aesthetics.",
+    "Auditing Discord avatars.",
+    "Browsing profile pictures.",
+    "Conducting avatar research."
+  ],
+  "banner": [
+    "Collecting banners.",
+    "Inspecting profile banners.",
+    "Running a banner gallery.",
+    "Auditing Discord profiles.",
+    "Studying banner aesthetics.",
+    "Browsing profile banners.",
+    "Conducting banner research.",
+    "Appreciating header images."
+  ],
+  "ascii": [
+    "Making text look weird.",
+    "Converting things unnecessarily.",
+    "Running an ASCII art studio.",
+    "Generating decorative text.",
+    "Doing things the hard way.",
+    "Producing ASCII masterpieces.",
+    "Typographic experimentation.",
+    "Making art out of characters."
+  ],
+  "define_urban": [
+    "Consulting both dictionaries.",
+    "Cross-referencing definitions.",
+    "Running a dual dictionary service.",
+    "Studying all the words.",
+    "Building a personal encyclopedia.",
+    "Expanding vocabulary aggressively.",
+    "Conducting linguistic research.",
+    "Learning everything, apparently."
+  ],
+  "lyrics_urban": [
+    "Researching music and slang simultaneously.",
+    "Building a very specific vocabulary.",
+    "Cross-referencing song lyrics with street definitions.",
+    "Studying the full spectrum of human language.",
+    "Running a dual cultural research operation.",
+    "Consulting both the refined and the unhinged dictionary.",
+    "Investigating music and internet culture at once.",
+    "Academic research, loosely defined."
+  ],
+  "avatar_banner": [
+    "Collecting profile aesthetics.",
+    "Running a Discord profile gallery.",
+    "Auditing people's digital identities.",
+    "Inspecting profiles, professionally.",
+    "Conducting aesthetic research.",
+    "Building a profile picture archive.",
+    "Studying Discord profile design.",
+    "Appreciating profile art, extensively.",
+    "Maybe stealing profile presets."
+  ]
+}

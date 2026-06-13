@@ -1,0 +1,6 @@
+{
+  "unauthorized": [
+    "https://example.com/replace-with-your-cdn-url-1.png",
+    "https://example.com/replace-with-your-cdn-url-2.png"
+  ]
+}
