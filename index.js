@@ -167,7 +167,7 @@ client.on('interactionCreate', async interaction => {
     await command.execute(interaction);
     await recordCommand(interaction.user.id, interaction.commandName).catch(() => {});
   } catch (err) {
-    console.error(`[Error] /${interaction.commandName}:`, err?.rawError?.errors ?? err);
+    console.error(`[Error] /${interaction.commandName}:`, JSON.stringify(err?.rawError?.errors, null, 2));
     const msg = { content: '❌ Something went wrong running this command.', flags: 64 };
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply(msg).catch(() => {});
@@ -178,4 +178,4 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(TOKEN);
-                        
+  
