@@ -44,7 +44,7 @@ function buildUnauthorizedResponse() {
         type: 17,
         components: [
           { type: 10, content: `## ${header}` },
-          { type: 11, media: { url: image } },
+          { type: 12, media: { url: image } },
           { type: 10, content: `-# You are not authorized to use this command.\n-# ${footer}` },
         ],
       },
@@ -150,6 +150,10 @@ client.on('interactionCreate', async interaction => {
     return stats.handleButton(interaction);
   }
 
+  if (interaction.isStringSelectMenu() && interaction.customId.startsWith('github_')) {
+    return github.handleSelect(interaction);
+  }
+
   if (!interaction.isChatInputCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
@@ -178,4 +182,4 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(TOKEN);
-  
+                                                 
