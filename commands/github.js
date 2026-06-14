@@ -96,7 +96,7 @@ function buildProfile(user, requesterId) {
   const components = [
     textDisplay(`## ${trunc(user.name ?? user.login, 100)} — [${user.login}](${user.html_url})`),
     separator(),
-    { type: 12, media: { url: user.avatar_url } },
+    { type: 12, alt_text: "image", media: { url: user.avatar_url } },
     separator(),
     textDisplay(
       (user.bio ? `*${trunc(user.bio, 200)}*\n\n` : '') +
@@ -307,4 +307,3 @@ module.exports = {
     await interaction.editReply(buildPayload(pageComponents, username, page, requesterId));
   },
 };
-    
