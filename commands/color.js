@@ -32,7 +32,7 @@ module.exports = {
     const components = [
       textDisplay(`## 🎨 Color — ${hex}`),
       separator(),
-      { type: 12, alt_text: "image", media: { url: swatchUrl } },
+      { type: 12, items: [{ media: { url: swatchUrl } }] },
       separator(),
       textDisplay(
         `**HEX:** \`${hex}\`\n` +
@@ -47,4 +47,3 @@ module.exports = {
     await interaction.reply(container(components, interaction.user.id));
   },
 };
-      
