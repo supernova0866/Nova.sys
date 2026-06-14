@@ -44,7 +44,7 @@ function buildUnauthorizedResponse() {
         type: 17,
         components: [
           { type: 10, content: `## ${header}` },
-          { type: 12, media: { url: image } },
+          { type: 12, alt_text: "image", media: { url: image } },
           { type: 10, content: `-# You are not authorized to use this command.\n-# ${footer}` },
         ],
       },
@@ -182,4 +182,3 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(TOKEN);
-                                                 
