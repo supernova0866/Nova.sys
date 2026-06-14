@@ -24,18 +24,24 @@ function deleteButton(requesterId) {
 }
 
 function pageSelect(username, activePage, requesterId) {
+  const pages = [
+    { label: 'Profile', value: 'profile' },
+    { label: 'Repos', value: 'repos' },
+    { label: 'Languages', value: 'languages' },
+    { label: 'Details', value: 'details' },
+    { label: 'Activity', value: 'activity' },
+  ];
   return {
     type: 1,
     components: [{
       type: 3,
       custom_id: `github_${username}_${requesterId}`,
-      options: [
-        { label: 'Profile', value: 'profile', default: activePage === 'profile' },
-        { label: 'Repos', value: 'repos', default: activePage === 'repos' },
-        { label: 'Languages', value: 'languages', default: activePage === 'languages' },
-        { label: 'Details', value: 'details', default: activePage === 'details' },
-        { label: 'Activity', value: 'activity', default: activePage === 'activity' },
-      ],
+      placeholder: `Viewing: ${pages.find(p => p.value === activePage)?.label ?? 'Profile'}`,
+      options: pages.map(p => ({
+        label: p.label,
+        value: p.value,
+        ...(activePage === p.value ? { default: true } : {}),
+      })),
     }],
   };
 }
@@ -301,4 +307,4 @@ module.exports = {
     await interaction.editReply(buildPayload(pageComponents, username, page, requesterId));
   },
 };
-         
+    
