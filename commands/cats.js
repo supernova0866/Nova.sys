@@ -65,7 +65,7 @@ module.exports = {
     const components = [
       textDisplay(`## 🐱 Cat — \`${label}\``),
       separator(),
-      { type: 12, alt_text: "image", media: { url: cat.url } },
+      { type: 12, items: [{ media: { url: cat.url } }] },
     ];
 
     await interaction.reply(container(components, interaction.user.id));
