@@ -19,7 +19,7 @@ function avatarCommand() {
       const components = [
         textDisplay(`## 🖼️ Avatar — ${target.username}`),
         separator(),
-        { type: 11, media: { url: avatar } },
+        { type: 12, media: { url: avatar } },
         separator(),
         textDisplay(`[PNG](${avatar})${isAnimated ? ` • [GIF](${gifAvatar})` : ''} • \`${target.id}\``),
       ];
@@ -53,7 +53,7 @@ function bannerCommand() {
       const components = [
         textDisplay(`## 🎨 Banner — ${target.username}`),
         separator(),
-        { type: 11, media: { url: banner } },
+        { type: 12, media: { url: banner } },
         separator(),
         textDisplay(`[PNG](${banner})${isAnimated ? ` • [GIF](${gifBanner})` : ''} • \`${target.id}\``),
       ];
@@ -64,3 +64,4 @@ function bannerCommand() {
 }
 
 module.exports = { avatarCommand, bannerCommand };
+      
