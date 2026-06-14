@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
 const { container, textDisplay, separator } = require('../utils/components');
 
+const trunc = (str, len) => str && str.length > len ? str.slice(0, len - 3) + '...' : str;
+
 const ghHeaders = process.env.GITHUB_TOKEN
   ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
   : {};
@@ -56,7 +58,7 @@ module.exports = {
       const components = [
         textDisplay(`## 📦 [${data.full_name}](${data.html_url})`),
         separator(),
-        textDisplay(data.description ? `*${data.description}*` : '*No description*'),
+        textDisplay(data.description ? `*${trunc(data.description, 200)}*` : '*No description*'),
         separator(),
         textDisplay(
           `⭐ **Stars:** ${data.stargazers_count.toLocaleString()}\n` +
@@ -76,7 +78,7 @@ module.exports = {
 
       if (data.homepage) {
         components.push(separator());
-        components.push(textDisplay(`🌐 [${data.homepage}](${data.homepage.startsWith('http') ? data.homepage : 'https://' + data.homepage})`));
+        components.push(textDisplay(`🌐 [${trunc(data.homepage, 100)}](${data.homepage.startsWith('http') ? data.homepage : 'https://' + data.homepage})`));
       }
 
       return interaction.editReply(container(components, interaction.user.id));
@@ -93,7 +95,7 @@ module.exports = {
 
     const created = Math.floor(new Date(user.created_at).getTime() / 1000);
     const topRepos = repos.slice(0, 3).map(r =>
-      `• [${r.name}](${r.html_url}) — ⭐ ${r.stargazers_count} ${r.language ? `\`${r.language}\`` : ''}`
+      `• [${trunc(r.name, 50)}](${r.html_url}) — ⭐ ${r.stargazers_count} ${r.language ? `\`${trunc(r.language, 20)}\`` : ''}`
     ).join('\n') || 'No public repos';
 
     const stats = [
@@ -104,20 +106,21 @@ module.exports = {
     ].join(' • ');
 
     const components = [
-      textDisplay(`## ${user.name ?? user.login} — [${user.login}](${user.html_url})`),
+      textDisplay(`## ${trunc(user.name ?? user.login, 100)} — [${user.login}](${user.html_url})`),
       separator(),
       { type: 11, media: { url: user.avatar_url } },
       separator(),
-      textDisplay(user.bio ? `*${user.bio}*\n\n${stats}` : stats),
+      textDisplay(user.bio ? `*${trunc(user.bio, 200)}*\n\n${stats}` : stats),
       separator(),
       textDisplay(`**Top repos:**\n${topRepos}`),
     ];
 
     if (user.blog) {
       components.push(separator());
-      components.push(textDisplay(`🌐 [${user.blog}](${user.blog.startsWith('http') ? user.blog : 'https://' + user.blog})`));
+      components.push(textDisplay(`🌐 [${trunc(user.blog, 100)}](${user.blog.startsWith('http') ? user.blog : 'https://' + user.blog})`));
     }
 
     await interaction.editReply(container(components, interaction.user.id));
   },
 };
+    
