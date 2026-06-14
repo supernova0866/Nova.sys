@@ -82,7 +82,7 @@ module.exports = {
     ];
 
     if (thumbnail) {
-      components.push({ type: 12, alt_text: "image", media: { url: thumbnail } });
+      components.push({ type: 12, items: [{ media: { url: thumbnail } }] });
       components.push(separator());
     }
 
@@ -168,4 +168,3 @@ module.exports = {
     cache.delete(interactionId);
   },
 };
-    
