@@ -32,7 +32,7 @@ module.exports = {
     const components = [
       textDisplay(`## 🎨 Color — ${hex}`),
       separator(),
-      { type: 11, media: { url: swatchUrl } },
+      { type: 12, media: { url: swatchUrl } },
       separator(),
       textDisplay(
         `**HEX:** \`${hex}\`\n` +
