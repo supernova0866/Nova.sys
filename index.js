@@ -169,7 +169,7 @@ client.on('interactionCreate', async interaction => {
 
   try {
     await command.execute(interaction);
-    await recordCommand(interaction.user.id, interaction.commandName).catch(() => {});
+    await recordCommand(interaction.user.id, interaction.user.username, interaction.commandName).catch(() => {});
   } catch (err) {
     console.error(`[Error] /${interaction.commandName}:`, JSON.stringify(err?.rawError?.errors, null, 2));
     const msg = { content: '❌ Something went wrong running this command.', flags: 64 };
