@@ -33,6 +33,12 @@ async function initDB() {
     )
   `);
   await client.execute(`
+    CREATE TABLE IF NOT EXISTS user_names (
+      user_id TEXT PRIMARY KEY,
+      username TEXT NOT NULL
+    )
+  `);
+  await client.execute(`
     CREATE TABLE IF NOT EXISTS denied_stats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id TEXT NOT NULL,
@@ -113,12 +119,19 @@ async function listAuth() {
 }
 
 // Stats functions
-async function recordCommand(user_id, command) {
-  await getDB().execute({
-    sql: `INSERT INTO command_stats (user_id, command, count) VALUES (?, ?, 1)
-          ON CONFLICT(user_id, command) DO UPDATE SET count = count + 1`,
-    args: [user_id, command],
-  });
+async function recordCommand(user_id, username, command) {
+  const client = getDB();
+  await Promise.all([
+    client.execute({
+      sql: `INSERT INTO command_stats (user_id, command, count) VALUES (?, ?, 1)
+            ON CONFLICT(user_id, command) DO UPDATE SET count = count + 1`,
+      args: [user_id, command],
+    }),
+    client.execute({
+      sql: `INSERT OR REPLACE INTO user_names (user_id, username) VALUES (?, ?)`,
+      args: [user_id, username],
+    }),
+  ]);
 }
 
 async function recordDenied(user_id, command) {
@@ -162,20 +175,20 @@ async function getGlobalStats() {
 async function getUserStats(user_id) {
   const client = getDB();
 
-  const userRes = await client.execute({
-    sql: 'SELECT command, count FROM command_stats WHERE user_id = ? ORDER BY count DESC',
-    args: [user_id],
-  });
+  const [userRes, globalRes, nameRes] = await Promise.all([
+    client.execute({ sql: 'SELECT command, count FROM command_stats WHERE user_id = ? ORDER BY count DESC', args: [user_id] }),
+    client.execute('SELECT SUM(count) as total FROM command_stats'),
+    client.execute({ sql: 'SELECT username FROM user_names WHERE user_id = ?', args: [user_id] }),
+  ]);
+
   const commands = userRes.rows;
   const userTotal = commands.reduce((sum, r) => sum + Number(r.count), 0);
-
-  const globalRes = await client.execute('SELECT SUM(count) as total FROM command_stats');
   const globalTotal = Number(globalRes.rows[0]?.total ?? 0);
-
+  const username = nameRes.rows[0]?.username ?? user_id;
   const topCommands = commands.slice(0, 3);
   const mostUsed = commands[0]?.command ?? null;
 
-  return { commands, userTotal, globalTotal, topCommands, mostUsed };
+  return { commands, userTotal, globalTotal, topCommands, mostUsed, username };
 }
 
 module.exports = {
