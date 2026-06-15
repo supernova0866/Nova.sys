@@ -123,8 +123,8 @@ function buildGlobalCommands(data, requesterId) {
 }
 
 // ─── User Stats ────────────────────────────────────────────────────
-function buildUserStats(username, data, isSelf, requesterId) {
-  const { userTotal, globalTotal, topCommands, mostUsed } = data;
+function buildUserStats(username, userId, data, isSelf, requesterId, page = 'overview') {
+  const { userTotal, globalTotal, topCommands, mostUsed, commands } = data;
 
   const contribution = globalTotal > 0
     ? ((userTotal / globalTotal) * 100).toFixed(1)
@@ -132,16 +132,48 @@ function buildUserStats(username, data, isSelf, requesterId) {
 
   const source = pick(isSelf ? sourceData.user_self : sourceData.user_other);
 
+  const userButtons = [
+    { type: 1, components: [
+      { type: 2, style: page === 'overview' ? 1 : 2, label: 'Overview', custom_id: `stats_user_overview_${requesterId}_${userId}` },
+      { type: 2, style: page === 'commands' ? 1 : 2, label: 'Commands', custom_id: `stats_user_commands_${requesterId}_${userId}` },
+    ]},
+    { type: 1, components: [{ type: 2, style: 4, label: '✕', custom_id: `delete_${requesterId}` }] },
+  ];
+
   if (userTotal === 0) {
-    return buildPayload('user', null, requesterId, [
-      textDisplay(`## Statistics for ${username}`),
-      separator(),
-      textDisplay(`Commands Used\n**0**`),
-      separator(),
-      textDisplay(`No activity detected.\n\nThe subject appears to be observing the bot from a safe distance.`),
-      separator(),
-      textDisplay(`-# ${pick(sourceData.user_zero)}`),
-    ]);
+    return {
+      flags: 1 << 15,
+      components: [{ type: 17, components: [
+        textDisplay(`## Statistics for ${username}`),
+        separator(),
+        textDisplay(`Commands Used\n**0**`),
+        separator(),
+        textDisplay(`No activity detected.\n\nThe subject appears to be observing the bot from a safe distance.`),
+        separator(),
+        textDisplay(`-# ${pick(sourceData.user_zero)}`),
+        ...userButtons,
+      ]}],
+    };
+  }
+
+  if (page === 'commands') {
+    const allLines = commands.map(r =>
+      `${pad('/' + r.command, 16)} ${rpad(Number(r.count).toLocaleString(), 6)}`
+    ).join('\n');
+
+    return {
+      flags: 1 << 15,
+      components: [{ type: 17, components: [
+        textDisplay(`## Command Usage — ${username}`),
+        separator(),
+        textDisplay(`\`\`\`\n${allLines || 'No data yet'}\n\`\`\``),
+        separator(),
+        textDisplay(`Total\n**${userTotal.toLocaleString()}**`),
+        separator(),
+        textDisplay(`-# ${source}`),
+        ...userButtons,
+      ]}],
+    };
   }
 
   const topLines = topCommands.map(r =>
@@ -150,7 +182,7 @@ function buildUserStats(username, data, isSelf, requesterId) {
 
   const activity = getActivity(topCommands);
 
-  return buildPayload('user', null, requesterId, [
+  return buildPayload('user', 'overview', requesterId, [
     textDisplay(`## Statistics for ${username}`),
     separator(),
     textDisplay(`Commands Used\n**${userTotal.toLocaleString()}**`),
@@ -233,25 +265,40 @@ module.exports = {
 
     const data = await getUserStats(targetUser.id);
     const isSelf = targetUser.id === interaction.user.id;
-    return interaction.editReply(buildUserStats(targetUser.username, data, isSelf, interaction.user.id));
+    return interaction.editReply(buildUserStats(targetUser.username, targetUser.id, data, isSelf, interaction.user.id));
   },
 
   async handleButton(interaction) {
-    const parts = interaction.customId.split('_'); // stats_scope_page_requesterId
+    // custom_id formats:
+    // global: stats_global_overview_requesterId
+    // user:   stats_user_overview_requesterId_username
+    const parts = interaction.customId.split('_');
     const scope = parts[1];
     const page = parts[2];
-    const requesterId = parts.slice(3).join('_');
 
-    if (interaction.user.id !== requesterId && interaction.user.id !== OWNER_ID) {
-      return interaction.reply({ content: '❌ This belongs to someone else.', flags: 64 });
+    if (scope === 'global') {
+      const requesterId = parts.slice(3).join('_');
+      if (interaction.user.id !== requesterId && interaction.user.id !== OWNER_ID) {
+        return interaction.reply({ content: '❌ This belongs to someone else.', flags: 64 });
+      }
+      await interaction.deferUpdate();
+      const data = await getGlobalStats();
+      const payload = page === 'overview'
+        ? buildGlobalOverview(data, requesterId)
+        : buildGlobalCommands(data, requesterId);
+      return interaction.editReply(payload);
     }
 
-    await interaction.deferUpdate();
-    const data = await getGlobalStats();
-    const payload = page === 'overview'
-      ? buildGlobalOverview(data, requesterId)
-      : buildGlobalCommands(data, requesterId);
-
-    await interaction.editReply(payload);
+    if (scope === 'user') {
+      const requesterId = parts[3];
+      const targetUserId = parts[4];
+      if (interaction.user.id !== requesterId && interaction.user.id !== OWNER_ID) {
+        return interaction.reply({ content: '❌ This belongs to someone else.', flags: 64 });
+      }
+      await interaction.deferUpdate();
+      const isSelf = targetUserId === requesterId;
+      const data = await getUserStats(targetUserId);
+      return interaction.editReply(buildUserStats(data.username, targetUserId, data, isSelf, requesterId, page));
+    }
   },
 };
