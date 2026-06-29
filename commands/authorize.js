@@ -33,7 +33,7 @@ module.exports = {
       return interaction.reply({ content: `❌ A user is required for \`${mode}\`.`, flags: 64 });
     }
 
-    await interaction.deferReply({ flags: 64 });
+    await interaction.deferReply();
 
     if (mode === 'add') {
       const already = await isAuthorized(user.id);
@@ -58,7 +58,7 @@ module.exports = {
       if (!users.length) {
         return interaction.editReply({ content: '📋 No authorized users yet.' });
       }
-      const lines = users.map((u, i) => `${i + 1}. **${u.username}** — \`${u.user_id}\``).join('\n');
+      const lines = users.map((u, i) => `${i + 1}. <@${u.user_id}> — \`${u.user_id}\``).join('\n');
       const components = [
         textDisplay('## 📋 Authorized Users'),
         separator(),
