@@ -147,7 +147,11 @@ client.on('interactionCreate', async interaction => {
   }
 
   if (interaction.isButton() && interaction.customId.startsWith('stats_')) {
-    return stats.handleButton(interaction);
+  return stats.handleButton(interaction);
+  }
+  
+  if (interaction.isButton() && interaction.customId.startsWith('stash_page_')) {
+  return stash.handleButton(interaction);
   }
 
   if (interaction.isStringSelectMenu() && interaction.customId.startsWith('github_')) {
