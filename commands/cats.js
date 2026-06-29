@@ -63,9 +63,10 @@ module.exports = {
     const label = [k1, k2].filter(Boolean).join(' + ') || 'random';
 
     const components = [
-      textDisplay(`## 🐱 Cat — \`${label}\``),
-      separator(),
-      { type: 12, items: [{ media: { url: cat.url } }] },
+  textDisplay(`## 🐱 Cat — \`${label}\``),
+  separator(),
+  { type: 12, items: [{ media: { url: cat.url } }] },
+  ...(cat.credit ? [separator(), textDisplay(`-# Credit: ${cat.credit}`)] : []),
     ];
 
     await interaction.reply(container(components, interaction.user.id));
