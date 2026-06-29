@@ -54,7 +54,6 @@ function buildUnauthorizedResponse() {
 
 console.log('[Boot] Loading commands...');
 const calc = require('./commands/calc'); console.log('[Boot] calc OK');
-
 const define = require('./commands/define'); console.log('[Boot] define OK');
 const time = require('./commands/time'); console.log('[Boot] time OK');
 const { avatarCommand, bannerCommand } = require('./commands/avatarbanner'); console.log('[Boot] avatarbanner OK');
@@ -71,6 +70,7 @@ const help = require('./commands/help'); console.log('[Boot] help OK');
 const stats = require('./commands/stats'); console.log('[Boot] stats OK');
 const quote = require('./commands/quote'); console.log('[Boot] quote OK');
 const fact = require('./commands/fact'); console.log('[Boot] fact OK');
+const stash = require('./commands/stash'); console.log('[Boot] stash OK');
 const authorize = require('./commands/authorize'); console.log('[Boot] authorize OK');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
