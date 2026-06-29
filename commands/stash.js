@@ -67,7 +67,7 @@ function showTagList(interaction, userStash, page, isUpdate = false) {
   const pageTags = tags.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
   const requesterId = interaction.user.id;
 
-  const lines = pageTags.map((t, i) => `${page * PAGE_SIZE + i + 1}. \`${t}\` — ${userStash[t].desc}`).join('\n');
+  const lines = pageTags.map((t, i) => `${page * PAGE_SIZE + i + 1}. \`${t}\``).join('\n');
 
   const navButtons = [];
   if (page > 0) navButtons.push({
