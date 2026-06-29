@@ -36,9 +36,7 @@ module.exports = {
     }
 
     const components = [
-      textDisplay(`## ${entry.desc}`),
-      separator(),
-      ...entry.urls.map(url => ({ type: 12, items: [{ media: { url } }] })),
+  ...entry.urls.map(url => ({ type: 12, items: [{ media: { url } }] })),
     ];
 
     await interaction.reply(container(components, interaction.user.id));
