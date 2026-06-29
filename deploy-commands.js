@@ -10,13 +10,14 @@ const ascii = require('./commands/ascii');
 const color = require('./commands/color');
 const ship = require('./commands/ship');
 const rate = require('./commands/rate');
+const stash = require('./commands/stash');
 const lyrics = require('./commands/lyrics');
 
 const commands = [
   calc, define, time,
   avatarCommand(), bannerCommand(),
   github, ascii, color,
-  ship, rate, lyrics,
+  ship, rate, lyrics, stash,
 ].map(c => c.data.toJSON());
 
 const rest = new REST().setToken(TOKEN);
