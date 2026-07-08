@@ -1,8 +1,9 @@
-const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Collection, REST, Routes } = require('discord.js');
 require('./ping');
 const { TOKEN, CLIENT_ID } = require('./config');
 const { initDB, isAuthorized, recordCommand, recordDenied } = require('./db');
 const { handleDelete } = require('./utils/components');
+const { attachXpListener } = require('./utils/xpTracker');
 const unauthorizedData = require('./assets/unauthorized.json');
 const imagesData = require('./assets/images.json');
 const pfpData = require('./assets/pfp.json');
@@ -72,8 +73,17 @@ const quote = require('./commands/quote'); console.log('[Boot] quote OK');
 const fact = require('./commands/fact'); console.log('[Boot] fact OK');
 const stash = require('./commands/stash'); console.log('[Boot] stash OK');
 const authorize = require('./commands/authorize'); console.log('[Boot] authorize OK');
+console.log('[Boot] Loading guild-only commands...');
+const dump = require('./guildcommands/dump'); console.log('[Boot] dump (guild) OK');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+  partials: [Partials.Message, Partials.Channel],
+});
 client.commands = new Collection();
 
 const commands = [
@@ -81,15 +91,29 @@ const commands = [
   avatarCommand(), bannerCommand(),
   github, ascii, color,
   ship, rate, lyrics, urban, ratelimit,
-  cats, help, stats, quote, fact,
+  cats, help, stats, quote, fact, stash,
   authorize,
 ];
+
+const guildCommands = [dump];
 
 const validCommands = commands.filter(cmd => {
   if (!cmd?.data?.name) { console.error('[Boot] Invalid command object:', JSON.stringify(cmd)); return false; }
   return true;
 });
 for (const cmd of validCommands) {
+  client.commands.set(cmd.data.name, cmd);
+}
+
+const validGuildCommands = guildCommands.filter(cmd => {
+  if (!cmd?.data?.name) { console.error('[Boot] Invalid guild command object:', JSON.stringify(cmd)); return false; }
+  if (!cmd?.guildId || cmd.guildId === 'PUT_YOUR_GUILD_ID_HERE') {
+    console.error(`[Boot] Guild command "${cmd.data.name}" is missing a real guildId — skipping registration.`);
+    return false;
+  }
+  return true;
+});
+for (const cmd of validGuildCommands) {
   client.commands.set(cmd.data.name, cmd);
 }
 
@@ -125,13 +149,58 @@ async function syncCommands() {
   }
 }
 
+async function syncGuildCommands() {
+  if (!validGuildCommands.length) return;
+
+  const rest = new REST().setToken(TOKEN);
+
+  // Group by guildId in case future guild-only commands target different servers
+  const byGuild = {};
+  for (const cmd of validGuildCommands) {
+    (byGuild[cmd.guildId] ??= []).push(cmd.data.toJSON());
+  }
+
+  for (const [guildId, localCommands] of Object.entries(byGuild)) {
+    const localNames = new Set(localCommands.map(c => c.name));
+
+    let registered;
+    try {
+      registered = await rest.get(Routes.applicationGuildCommands(CLIENT_ID, guildId));
+    } catch (err) {
+      console.error(`[Deploy] Failed to fetch guild commands for ${guildId}:`, err.message);
+      continue;
+    }
+
+    const registeredNames = new Set(registered.map(c => c.name));
+    const missing = localCommands.filter(c => !registeredNames.has(c.name));
+    const extra = registered.filter(c => !localNames.has(c.name));
+
+    if (missing.length === 0 && extra.length === 0) {
+      console.log(`[Deploy] Guild ${guildId} commands up to date, skipping deploy`);
+      continue;
+    }
+
+    console.log(`[Deploy] Guild ${guildId} changes detected — missing: [${missing.map(c => c.name).join(', ') || 'none'}], extra: [${extra.map(c => c.name).join(', ') || 'none'}]`);
+
+    try {
+      await rest.put(Routes.applicationGuildCommands(CLIENT_ID, guildId), { body: localCommands });
+      console.log(`[Deploy] ✅ Registered ${localCommands.length} guild commands for ${guildId}`);
+    } catch (err) {
+      console.error(`[Deploy] ❌ Failed to register guild commands for ${guildId}:`, err.message);
+    }
+  }
+}
+
 client.once('ready', async () => {
   console.log(`[Bot] Logged in as ${client.user.tag}`);
   await initDB();
   await syncCommands();
+  await syncGuildCommands();
   await rotatePfp(client);
   setInterval(() => rotatePfp(client), PFP_INTERVAL_MS);
 });
+
+attachXpListener(client);
 
 client.on('interactionCreate', async interaction => {
   if (interaction.isButton() && interaction.customId.startsWith('delete_')) {
