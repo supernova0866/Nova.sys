@@ -1,0 +1,17 @@
+{
+  "bump": {
+    "botId": "735147814878969968",
+    "channelId": "1394753058113720570",
+    "matchText": "Thx for bumping",
+    "label": "Bump",
+    "emoji": "🚀"
+  },
+  "water": {
+    "botId": "972637072991068220",
+    "channelId": "1378090823408685226",
+    "messageId": "1378093083249475624",
+    "matchText": "Last watered by",
+    "label": "Water",
+    "emoji": "💧"
+  }
+}
