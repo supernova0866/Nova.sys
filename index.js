@@ -254,4 +254,6 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-client.login(TOKEN);
+client.login(TOKEN).catch(err => {
+  console.error('[Bot] Failed to log in:', err.message);
+});
