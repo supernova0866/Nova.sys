@@ -36,18 +36,23 @@ module.exports = {
       return interaction.editReply({ content: `📭 No ${cfg?.label ?? type} events logged since the last dump.` });
     }
 
-    const lines = rows.map((r, i) =>
-      `${i + 1}. <@${r.user_id}> — **${r.count}** ${Number(r.count) === 1 ? 'time' : 'times'}`
-    ).join('\n');
+    const xpPerEvent = Number(cfg?.xp ?? 0);
+
+    const lines = rows.map((r, i) => {
+      const count = Number(r.count);
+      const xp = count * xpPerEvent;
+      return `${i + 1}. <@${r.user_id}> — **${count}** ${count === 1 ? 'time' : 'times'} — **${xp.toLocaleString()} XP**`;
+    }).join('\n');
 
     const total = rows.reduce((s, r) => s + Number(r.count), 0);
+    const totalXp = total * xpPerEvent;
 
     const components = [
       textDisplay(`## ${cfg?.emoji ?? '📋'} ${cfg?.label ?? type} Log Dump`),
       separator(),
       textDisplay(lines),
       separator(),
-      textDisplay(`**Total events:** ${total} · **Unique users:** ${rows.length}\n-# Log cleared — starting fresh.`),
+      textDisplay(`**Total events:** ${total} · **Unique users:** ${rows.length} · **Total XP:** ${totalXp.toLocaleString()}\n-# Log cleared — starting fresh.`),
     ];
 
     await interaction.editReply(container(components, interaction.user.id));
