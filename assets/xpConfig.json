@@ -4,7 +4,8 @@
     "channelId": "1394753058113720570",
     "matchText": "Thx for bumping",
     "label": "Bump",
-    "emoji": "🚀"
+    "emoji": "🚀",
+    "xp": 75
   },
   "water": {
     "botId": "972637072991068220",
@@ -12,6 +13,7 @@
     "messageId": "1378093083249475624",
     "matchText": "Last watered by",
     "label": "Water",
-    "emoji": "💧"
+    "emoji": "💧",
+    "xp": 20
   }
 }
