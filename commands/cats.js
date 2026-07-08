@@ -25,6 +25,11 @@ function filterImages(k1, k2) {
     if (one.length) return one;
   }
 
+  if (k2) {
+    const one = all.filter(i => i.keywords.includes(k2));
+    if (one.length) return one;
+  }
+
   return all;
 }
 
@@ -49,8 +54,9 @@ module.exports = {
 
     const pool = filterImages(k1, k2);
 
-    // If keywords were supplied but nothing matched even k1, show not found
-    if (k1 && pool === catsData.images && !catsData.images.some(i => i.keywords.includes(k1))) {
+    // filterImages only falls back to the full list when every supplied
+    // keyword (individually and combined) failed to match anything.
+    if ((k1 || k2) && pool === catsData.images) {
       const components = [
         textDisplay('## Cat Not Found.'),
         separator(),
@@ -63,10 +69,10 @@ module.exports = {
     const label = [k1, k2].filter(Boolean).join(' + ') || 'random';
 
     const components = [
-  textDisplay(`## 🐱 Cat — \`${label}\``),
-  separator(),
-  { type: 12, items: [{ media: { url: cat.url } }] },
-  ...(cat.credit ? [separator(), textDisplay(`-# Credit: ${cat.credit}`)] : []),
+      textDisplay(`## 🐱 Cat — \`${label}\``),
+      separator(),
+      { type: 12, items: [{ media: { url: cat.url } }] },
+      ...(cat.credit ? [separator(), textDisplay(`-# Credit: ${cat.credit}`)] : []),
     ];
 
     await interaction.reply(container(components, interaction.user.id));
