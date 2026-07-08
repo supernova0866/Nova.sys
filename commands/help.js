@@ -33,6 +33,9 @@ const CATEGORIES = {
       { name: '/ship [user1] [user2]', desc: 'Check compatibility between two users' },
       { name: '/rate [type] [user]', desc: 'Rate a user on aura, simp, waifu, and more' },
       { name: '/cats [keyword1?] [keyword2?]', desc: 'Fetch a cat image by keyword' },
+      { name: '/quote', desc: 'Get a random quote' },
+      { name: '/fact', desc: 'Get a random fact' },
+      { name: '/stash [tag?]', desc: 'Access your personal image stash' },
     ],
   },
   system: {
@@ -41,6 +44,7 @@ const CATEGORIES = {
     commands: [
       { name: '/authorize [mode] [user?]', desc: 'Manage who can use the bot (owner only)' },
       { name: '/stats [scope?] [user?]', desc: 'View bot or user usage stats' },
+      { name: '/dump [bump/water]', desc: 'Dump and clear the bump/water XP log' },
       { name: '/help', desc: 'Show this help menu' },
     ],
   },
