@@ -46,6 +46,21 @@ async function initDB() {
       denied_at INTEGER NOT NULL
     )
   `);
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS xp_log (
+      id        INTEGER PRIMARY KEY AUTOINCREMENT,
+      type      TEXT NOT NULL,
+      user_id   TEXT NOT NULL,
+      username  TEXT NOT NULL,
+      logged_at INTEGER NOT NULL
+    )
+  `);
+  await client.execute(`
+    CREATE TABLE IF NOT EXISTS bot_state (
+      key   TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    )
+  `);
   console.log('[DB] Tables ready');
 }
 
@@ -191,8 +206,51 @@ async function getUserStats(user_id) {
   return { commands, userTotal, globalTotal, topCommands, mostUsed, username };
 }
 
+// XP tracking functions (bump / water dump system)
+async function logXpEvent(type, user_id, username) {
+  await getDB().execute({
+    sql: 'INSERT INTO xp_log (type, user_id, username, logged_at) VALUES (?, ?, ?, ?)',
+    args: [type, user_id, username, Date.now()],
+  });
+}
+
+async function getXpLog(type) {
+  const result = await getDB().execute({
+    sql: `SELECT user_id, username, COUNT(*) as count FROM xp_log
+          WHERE type = ? GROUP BY user_id ORDER BY count DESC`,
+    args: [type],
+  });
+  return result.rows;
+}
+
+async function clearXpLog(type) {
+  await getDB().execute({
+    sql: 'DELETE FROM xp_log WHERE type = ?',
+    args: [type],
+  });
+}
+
+// Simple key/value state store (used to remember the last known waterer
+// across restarts, so we don't miss or double-count a water event)
+async function getState(key) {
+  const result = await getDB().execute({
+    sql: 'SELECT value FROM bot_state WHERE key = ?',
+    args: [key],
+  });
+  return result.rows[0]?.value ?? null;
+}
+
+async function setState(key, value) {
+  await getDB().execute({
+    sql: 'INSERT INTO bot_state (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
+    args: [key, value],
+  });
+}
+
 module.exports = {
   initDB, getShipRange,
   isAuthorized, addAuth, removeAuth, listAuth,
   recordCommand, recordDenied, getGlobalStats, getUserStats,
+  logXpEvent, getXpLog, clearXpLog,
+  getState, setState,
 };
