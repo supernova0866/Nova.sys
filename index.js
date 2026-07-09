@@ -203,58 +203,62 @@ client.once('ready', async () => {
 attachXpListener(client);
 
 client.on('interactionCreate', async interaction => {
-  if (interaction.isButton() && interaction.customId.startsWith('delete_')) {
-    return handleDelete(interaction);
-  }
-
-  if (interaction.isButton() && interaction.customId.startsWith('lyrics_show_')) {
-    return lyrics.handleShowLyrics(interaction);
-  }
-
-  if (interaction.isButton() && interaction.customId.startsWith('help_')) {
-    return help.handleButton(interaction);
-  }
-
-  if (interaction.isButton() && interaction.customId.startsWith('stats_')) {
-  return stats.handleButton(interaction);
-  }
-  
-  if (interaction.isButton() && interaction.customId.startsWith('stash_page_')) {
-  return stash.handleButton(interaction);
-  }
-
-  if (interaction.isStringSelectMenu() && interaction.customId.startsWith('github_')) {
-    return github.handleSelect(interaction);
-  }
-
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = client.commands.get(interaction.commandName);
-  if (!command) return;
-
-  if (interaction.commandName !== 'authorize') {
-    const authed = await isAuthorized(interaction.user.id);
-    if (!authed) {
-      await recordDenied(interaction.user.id, interaction.commandName).catch(() => {});
-      return interaction.reply(buildUnauthorizedResponse());
-    }
-  }
-
   try {
+    if (interaction.isButton() && interaction.customId.startsWith('delete_')) {
+      return await handleDelete(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId.startsWith('lyrics_show_')) {
+      return await lyrics.handleShowLyrics(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId.startsWith('help_')) {
+      return await help.handleButton(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId.startsWith('stats_')) {
+      return await stats.handleButton(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId.startsWith('stash_page_')) {
+      return await stash.handleButton(interaction);
+    }
+
+    if (interaction.isStringSelectMenu() && interaction.customId.startsWith('github_')) {
+      return await github.handleSelect(interaction);
+    }
+
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+
+    if (interaction.commandName !== 'authorize') {
+      const authed = await isAuthorized(interaction.user.id);
+      if (!authed) {
+        await recordDenied(interaction.user.id, interaction.commandName).catch(() => {});
+        return interaction.reply(buildUnauthorizedResponse());
+      }
+    }
+
     await command.execute(interaction);
     await recordCommand(interaction.user.id, interaction.user.username, interaction.commandName).catch(() => {});
   } catch (err) {
-    console.error(`[Error] /${interaction.commandName}:`, err.message);
+    const label = interaction.commandName ? `/${interaction.commandName}` : (interaction.customId ?? 'unknown');
+    console.error(`[Error] ${label}:`, err.message);
     if (err?.rawError?.errors) {
       console.error('[Discord API errors]', JSON.stringify(err.rawError.errors, null, 2));
     }
     console.error(err.stack);
-    const msg = { content: '❌ Something went wrong running this command.', flags: 64 };
-    if (interaction.deferred || interaction.replied) {
-      await interaction.editReply(msg).catch(() => {});
-    } else {
-      await interaction.reply(msg).catch(() => {});
-    }
+
+    const msg = { content: '❌ Something went wrong handling this interaction.', flags: 64 };
+    try {
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply(msg).catch(() => {});
+      } else if (typeof interaction.reply === 'function') {
+        await interaction.reply(msg).catch(() => {});
+      }
+    } catch {}
   }
 });
 
