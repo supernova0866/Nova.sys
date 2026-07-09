@@ -244,7 +244,11 @@ client.on('interactionCreate', async interaction => {
     await command.execute(interaction);
     await recordCommand(interaction.user.id, interaction.user.username, interaction.commandName).catch(() => {});
   } catch (err) {
-    console.error(`[Error] /${interaction.commandName}:`, JSON.stringify(err?.rawError?.errors, null, 2));
+    console.error(`[Error] /${interaction.commandName}:`, err.message);
+    if (err?.rawError?.errors) {
+      console.error('[Discord API errors]', JSON.stringify(err.rawError.errors, null, 2));
+    }
+    console.error(err.stack);
     const msg = { content: '❌ Something went wrong running this command.', flags: 64 };
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply(msg).catch(() => {});
