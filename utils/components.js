@@ -47,7 +47,18 @@ async function handleDelete(interaction) {
   if (interaction.user.id !== requesterId && interaction.user.id !== OWNER_ID) {
     return interaction.reply({ content: 'You cannot delete this message.', flags: 64 });
   }
-  await interaction.message.delete();
+
+  try {
+    await interaction.message.delete();
+  } catch (err) {
+    console.error('[Delete] Failed to delete message:', err.message);
+    if (!interaction.replied && !interaction.deferred) {
+      await interaction.reply({
+        content: '❌ Couldn\'t delete this message (missing permissions, or it was already removed).',
+        flags: 64,
+      }).catch(() => {});
+    }
+  }
 }
 
 module.exports = { parseRange, deleteButton, container, textDisplay, separator, handleDelete };
