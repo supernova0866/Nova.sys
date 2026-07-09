@@ -18,6 +18,9 @@ module.exports = {
           { name: 'bump', value: 'bump' },
           { name: 'water', value: 'water' },
         )
+    )
+    .addBooleanOption(o =>
+      o.setName('view').setDescription('Preview the log without clearing it (default: false)').setRequired(false)
     ),
 
   async execute(interaction) {
@@ -26,6 +29,7 @@ module.exports = {
     }
 
     const type = interaction.options.getString('type');
+    const viewMode = interaction.options.getBoolean('view') ?? false;
     const cfg = xpConfig[type];
 
     await interaction.deferReply();
@@ -48,19 +52,24 @@ module.exports = {
     const totalXp = total * xpPerEvent;
 
     const components = [
-      textDisplay(`## ${cfg?.emoji ?? '📋'} ${cfg?.label ?? type} Log Dump`),
+      textDisplay(`## ${cfg?.emoji ?? '📋'} ${cfg?.label ?? type} Log ${viewMode ? 'Preview' : 'Dump'}`),
       separator(),
       textDisplay(lines),
       separator(),
-      textDisplay(`**Total events:** ${total} · **Unique users:** ${rows.length} · **Total XP:** ${totalXp.toLocaleString()}\n-# Log cleared — starting fresh.`),
+      textDisplay(
+        `**Total events:** ${total} · **Unique users:** ${rows.length} · **Total XP:** ${totalXp.toLocaleString()}\n` +
+        (viewMode ? '-# Preview mode — log not cleared.' : '-# Log cleared — starting fresh.')
+      ),
     ];
 
     await interaction.editReply(container(components, interaction.user.id));
 
-    try {
-      await clearXpLog(type);
-    } catch (err) {
-      console.error(`[Dump] Failed to clear ${type} log:`, err.message);
+    if (!viewMode) {
+      try {
+        await clearXpLog(type);
+      } catch (err) {
+        console.error(`[Dump] Failed to clear ${type} log:`, err.message);
+      }
     }
   },
 };
