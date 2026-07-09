@@ -49,12 +49,19 @@ async function handleDelete(interaction) {
   }
 
   try {
-    await interaction.message.delete();
+    // Delete via the interaction's own webhook route instead of a
+    // channel-permission-based REST call. This still works even when the
+    // command was used as a user-installed app in a guild the bot itself
+    // isn't a member of (no bot-level channel permissions exist there),
+    // since webhook actions are authorized by the interaction token, not
+    // by the bot's own guild permissions.
+    await interaction.deferUpdate();
+    await interaction.deleteReply();
   } catch (err) {
     console.error('[Delete] Failed to delete message:', err.message);
     if (!interaction.replied && !interaction.deferred) {
       await interaction.reply({
-        content: '❌ Couldn\'t delete this message (missing permissions, or it was already removed).',
+        content: '❌ Couldn\'t delete this message.',
         flags: 64,
       }).catch(() => {});
     }
