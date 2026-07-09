@@ -50,8 +50,6 @@ function attachWaterListener(client) {
   const cfg = xpConfig.water;
   if (!cfg?.botId || !cfg?.channelId || !cfg?.messageId) return; // not configured yet
 
-  // Establish a baseline on startup so we know what "last watered by" was
-  // before we started watching, without logging it as a fresh event.
   client.once('ready', async () => {
     try {
       const channel = await client.channels.fetch(cfg.channelId);
@@ -74,20 +72,11 @@ function attachWaterListener(client) {
     if (newMessage.id !== cfg.messageId) return;
     if (newMessage.channelId !== cfg.channelId) return;
 
-    try {
-      if (newMessage.partial) newMessage = await newMessage.fetch();
-    } catch (err) {
-      console.error('[XP] Failed to fetch partial water message:', err.message);
-      return;
-    }
-
-    if (newMessage.author?.id !== cfg.botId) return;
-
     const current = extractWateredBy(newMessage.embeds?.[0]?.description);
     if (!current) return;
 
     const stored = await getState(WATER_STATE_KEY);
-    if (stored === current) return; // description changed, but not the waterer — ignore
+    if (stored === current) return; // description changed, but not the waterer, ignore in this case
 
     const username = await resolveUsername(client, current);
 
