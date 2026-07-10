@@ -117,6 +117,19 @@ for (const cmd of validGuildCommands) {
   client.commands.set(cmd.data.name, cmd);
 }
 
+function normalizeCommand(cmd) {
+  return {
+    name: cmd.name,
+    description: cmd.description ?? '',
+    options: cmd.options ?? [],
+  };
+}
+
+function commandChanged(local, existing) {
+  if (!existing) return true;
+  return JSON.stringify(normalizeCommand(local)) !== JSON.stringify(normalizeCommand(existing));
+}
+
 async function syncCommands() {
   const rest = new REST().setToken(TOKEN);
   const localCommands = validCommands.map(c => c.data.toJSON());
@@ -131,15 +144,17 @@ async function syncCommands() {
   }
 
   const registeredNames = new Set(registered.map(c => c.name));
+  const registeredByName = new Map(registered.map(c => [c.name, c]));
   const missing = localCommands.filter(c => !registeredNames.has(c.name));
+  const changed = localCommands.filter(c => registeredNames.has(c.name) && commandChanged(c, registeredByName.get(c.name)));
   const extra = registered.filter(c => !localNames.has(c.name));
 
-  if (missing.length === 0 && extra.length === 0) {
+  if (missing.length === 0 && changed.length === 0 && extra.length === 0) {
     console.log('[Deploy] All commands up to date, skipping deploy');
     return;
   }
 
-  console.log(`[Deploy] Changes detected — missing: [${missing.map(c => c.name).join(', ') || 'none'}], extra: [${extra.map(c => c.name).join(', ') || 'none'}]`);
+  console.log(`[Deploy] Changes detected — missing: [${missing.map(c => c.name).join(', ') || 'none'}], changed: [${changed.map(c => c.name).join(', ') || 'none'}], extra: [${extra.map(c => c.name).join(', ') || 'none'}]`);
 
   try {
     await rest.put(Routes.applicationCommands(CLIENT_ID), { body: localCommands });
@@ -172,15 +187,17 @@ async function syncGuildCommands() {
     }
 
     const registeredNames = new Set(registered.map(c => c.name));
+    const registeredByName = new Map(registered.map(c => [c.name, c]));
     const missing = localCommands.filter(c => !registeredNames.has(c.name));
+    const changed = localCommands.filter(c => registeredNames.has(c.name) && commandChanged(c, registeredByName.get(c.name)));
     const extra = registered.filter(c => !localNames.has(c.name));
 
-    if (missing.length === 0 && extra.length === 0) {
+    if (missing.length === 0 && changed.length === 0 && extra.length === 0) {
       console.log(`[Deploy] Guild ${guildId} commands up to date, skipping deploy`);
       continue;
     }
 
-    console.log(`[Deploy] Guild ${guildId} changes detected — missing: [${missing.map(c => c.name).join(', ') || 'none'}], extra: [${extra.map(c => c.name).join(', ') || 'none'}]`);
+    console.log(`[Deploy] Guild ${guildId} changes detected — missing: [${missing.map(c => c.name).join(', ') || 'none'}], changed: [${changed.map(c => c.name).join(', ') || 'none'}], extra: [${extra.map(c => c.name).join(', ') || 'none'}]`);
 
     try {
       await rest.put(Routes.applicationGuildCommands(CLIENT_ID, guildId), { body: localCommands });
